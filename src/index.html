@@ -1,0 +1,144 @@
+<html>
+	<head>
+		<title>jsenc example</title>
+		<script type="text/javascript" src="crypto-js/components/core.js"></script>
+		<script type="text/javascript" src="crypto-js/components/enc-base64.js"></script>
+		<script type="text/javascript" src="crypto-js/components/hmac.js"></script>
+		<script type="text/javascript" src="crypto-js/components/md5.js"></script>
+		<script type="text/javascript" src="crypto-js/components/evpkdf.js"></script>
+		<script type="text/javascript" src="crypto-js/components/cipher-core.js"></script>
+		<script type="text/javascript" src="crypto-js/components/pbkdf2.js"></script>
+		<script type="text/javascript" src="crypto-js/components/aes.js"></script>
+		<script type="text/javascript" src="crypto-js/components/sha256.js"></script>
+		<script type="text/javascript" src="jsenc.js"></script>
+		<style type="text/css">
+			fieldset
+			{
+				margin: 0 0 20px 0;
+				width: 400px;
+			}
+			
+			div.box
+			{
+				float: left;
+				width: 440px;
+			}
+			
+			label
+			{
+				display: block;
+				margin: 8px 0 0 0;
+				padding: 0;
+			}
+			
+			input[type=text],
+			select,
+			textarea
+			{
+				width: 100%;
+			}
+			
+			textarea
+			{
+				height: 150px;
+			}
+			
+			hr.clearer
+			{
+				float: none;
+				clear: both;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>jsenc example</h1>
+		
+		<p>
+<!--
+			<strong>jsenc</strong> is a JavaScript library to ... widely used hard disk encryption like <a href="http://en.wikipedia.org/wiki/Linux_Unified_Key_Setup">LUKS</a> and <a href="http://truecrypt.org/">TrueCrypt</a>. jsenc is using strongly using the <a href="http://code.google.com/p/crypto-js/">CryptoJS<a> library.
+-->
+			<strong>jsenc</strong> is a JavaScript library to using standardized password hashing and encrypting methods used by softwares like <a href="http://en.wikipedia.org/wiki/Linux_Unified_Key_Setup">LUKS</a> and <a href="http://truecrypt.org/">TrueCrypt</a>. jsenc is strongly using the <a href="http://code.google.com/p/crypto-js/">CryptoJS<a> library.
+		</p>
+		
+		<p>
+			All the cryptographic work (password hashing, data encryption/decryption) is done <strong>in your browser, no data is ever transmitted to a server</strong>, all the encryption/decryption is happening in this window. (This is the exact point of the library. After the page loads you can actually go offline and the page will still work.)
+		</p>
+		
+		<p>
+			Also, jsenc is open sourced, you can find it at <a href="http://github.com/gheja/jsenc">http://github.com/gheja/jsenc</a>.
+		</p>
+		
+		<div class="box">
+			<fieldset>
+				<legend>Parameters</legend>
+				
+				<label for="encrypt_password">Password:</label>
+				<input type="text" id="param_password" value="" /><br/>
+				
+				<label for="encrypt_password2">Password again:</label>
+				<input type="text" id="param_password2" value="" /><br/>
+				
+				<hr/>
+				
+				<label for="param_algo">Password hashing algorithm:</label>
+				<select id="param_algo" readonly="readonly">
+					<option value="SHA256">SHA256</option>
+				</select><br/>
+				
+				<label for="param_iterations">Password hashing iterations:</label>
+				<input type="text" id="param_iterations" value="" /><br/>
+				
+				<label for="param_salt">Password salt:</label>
+				<input type="text" id="param_salt" value="" /><br/>
+				
+				<label for="param_cipher">Data encryption cipher:</label>
+				<select id="param_cipher" readonly="readonly">
+					<option value="AES">AES</option>
+				</select><br/>
+				
+				<label for="param_encoding">Output encoding:</label>
+				<select id="param_encoding" readonly="readonly">
+					<option value="hex">hex</option>
+				</select><br/>
+				
+				<label for="param_iv">Cipher IV (initialization vector):</label>
+				<input type="text" id="param_iv" value="" /><br/>
+				
+				<input type="button" value="randomize" onclick="randomize_parameters();" /><br/>
+			</fieldset>
+		</div>
+		
+		<div class="box">
+			<fieldset>
+				<legend>Encrypt</legend>
+				
+				<label for="encrypt_data">Text to encrypt:</textarea>
+				<textarea id="encrypt_data"></textarea>
+				
+				<input type="button" value="encrypt" onclick="encrypt();" />
+			</fieldset>
+			
+			<fieldset>
+				<legend>Decrypt</legend>
+				
+				<label for="decrypt_data">Text to decrypt:</textarea>
+				<textarea id="decrypt_data"></textarea>
+				
+				<input type="button" value="load params and decrypt" onclick="decrypt();" /><br/>
+			</fieldset>
+		</div>
+		
+		<div class="box">
+			<fieldset>
+				<legend>Output</legend>
+				
+				<label for="output">Encrypted JSON data / decrypted text:</textarea>
+				<textarea id="output"></textarea>
+			</fieldset>
+		</div>
+		
+		<hr class="clearer" />
+		
+		<a href="http://github.com/gheja/jsenc">http://github.com/gheja/jsenc</a>
+	</body>
+</html>
