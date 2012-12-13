@@ -1,0 +1,28 @@
+--- a/src/crypto-js/components/cipher-core.js	2012-05-25 12:43:48.000000000 +0200
++++ b/src/crypto-js/components/cipher-core.js	2012-12-13 20:41:21.014944165 +0100
+@@ -17,6 +17,7 @@ CryptoJS.lib.Cipher || (function (undefi
+     var C_enc = C.enc;
+     var Utf8 = C_enc.Utf8;
+     var Base64 = C_enc.Base64;
++    var Hex = C_enc.Hex;
+     var C_algo = C.algo;
+     var EvpKDF = C_algo.EvpKDF;
+ 
+@@ -625,6 +626,17 @@ CryptoJS.lib.Cipher || (function (undefi
+         }
+     };
+ 
++    var HexFormatter = C_format.Hex = {
++        stringify: function (cipherParams) {
++            return cipherParams.ciphertext.toString(Hex);
++        },
++
++        parse: function (input) {
++            var ciphertext = Hex.parse(input);
++            return CipherParams.create({ ciphertext: ciphertext });
++        }
++    };
++
+     /**
+      * A cipher wrapper that returns ciphertext as a serializable cipher params object.
+      */
