@@ -115,8 +115,15 @@
 				<textarea id="encrypt_data"></textarea>
 				
 				<input type="button" value="encrypt" onclick="encrypt();" />
+				
+				<hr/>
+				
+				<label for="encrypt_output">Encrypted JSON data (output):</textarea>
+				<textarea id="encrypt_output"></textarea>
 			</fieldset>
-			
+		</div>
+		
+		<div class="box">
 			<fieldset>
 				<legend>Decrypt</legend>
 				
@@ -127,15 +134,11 @@
 				<textarea id="decrypt_data"></textarea>
 				
 				<input type="button" value="load params and decrypt" onclick="decrypt();" /><br/>
-			</fieldset>
-		</div>
-		
-		<div class="box">
-			<fieldset>
-				<legend>Output</legend>
 				
-				<label for="output">Encrypted JSON data / decrypted text:</textarea>
-				<textarea id="output"></textarea>
+				<hr/>
+				
+				<label for="decrypt_output">Decrypted text (output):</textarea>
+				<textarea id="decrypt_output"></textarea>
 			</fieldset>
 		</div>
 		

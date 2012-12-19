@@ -47,7 +47,7 @@ function encrypt()
 	result += "\"data\": \"" + encoded_data + "\"\n";
 	result += "}\n";
 	
-	document.getElementById("output").value = result; 
+	document.getElementById("encrypt_output").value = result; 
 	
 	return true;
 }
@@ -71,7 +71,7 @@ function decrypt()
 	document.getElementById("param_iterations").value = json.iterations;
 	
 	var key256Bits = CryptoJS.PBKDF2(password, CryptoJS.enc.Hex.parse(json.salt), { keySize: 256/32, iterations: json.iterations, hasher: CryptoJS.algo.SHA256 });
-	document.getElementById("output").value = CryptoJS.AES.decrypt(json.data, key256Bits, { iv: CryptoJS.enc.Hex.parse(json.iv), format: CryptoJS.format.Hex }).toString(CryptoJS.enc.Utf8);
+	document.getElementById("decrypt_output").value = CryptoJS.AES.decrypt(json.data, key256Bits, { iv: CryptoJS.enc.Hex.parse(json.iv), format: CryptoJS.format.Hex }).toString(CryptoJS.enc.Utf8);
 	
 	return true;
 }
