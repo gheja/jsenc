@@ -11,7 +11,7 @@ CryptoJS
   * Project URL: http://code.google.com/p/crypto-js/
   * Extract to: src/crypto-js/
 
-Download and extract CryptoJS, apply patch crypto-js_cipher-core_add_hex_format.patch
+Download and extract CryptoJS to src/crypto-js directory.
 
 I have tested with version 3.0.2.
 
