@@ -1,10 +1,22 @@
 jsenc
 =====
 
-Demo
-----
+jsenc is mostly patches and extensions to [CryptoJS](http://code.google.com/p/crypto-js/) and also some test scripts to provide demos for their usage.
 
-To see this repository online (the way it should look like if you've downloaded it) see http://jsenc.x0.hu/nightly/ (the page here updates nightly from this git repository).
+
+Demos
+-----
+
+http://jsenc.x0.hu/nightly/
+
+On the link above you can see the scripts online (i.e. the way they should look like if you have downloaded them), updated nightly from this git repository (master branch).
+
+
+Patches/extensions
+------------------
+
+TODO
+
 
 Dependencies
 ------------
@@ -18,4 +30,3 @@ Dependencies
 Download and extract CryptoJS to src/crypto-js directory.
 
 I have tested with version 3.0.2.
-
