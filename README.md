@@ -1,6 +1,8 @@
 jsenc
 =====
 
+To see this repository online (the way it should look like if you've downloaded it) see http://jsenc.x0.hu/nightly/ (the page here updates nightly from this git repository).
+
 Dependencies
 ============
 
