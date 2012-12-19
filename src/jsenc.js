@@ -17,8 +17,8 @@ function encrypt()
 	var salt = CryptoJS.enc.Hex.parse(document.getElementById("param_salt").value);
 	var iv = CryptoJS.enc.Hex.parse(document.getElementById("param_iv").value);
 	var iterations = document.getElementById("param_iterations").value;
-	var password = document.getElementById("param_password").value;
-	var password2 = document.getElementById("param_password2").value;
+	var password = document.getElementById("encrypt_password").value;
+	var password2 = document.getElementById("encrypt_password2").value;
 	var data = document.getElementById("encrypt_data").value;
 	var result = "";
 	
@@ -65,7 +65,7 @@ function decrypt()
 		return false;
 	}
 	
-	var password = document.getElementById("param_password").value;
+	var password = document.getElementById("decrypt_password").value;
 	document.getElementById("param_salt").value = json.salt;
 	document.getElementById("param_iv").value = json.iv;
 	document.getElementById("param_iterations").value = json.iterations;

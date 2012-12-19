@@ -10,6 +10,7 @@
 		<script type="text/javascript" src="crypto-js/components/pbkdf2.js"></script>
 		<script type="text/javascript" src="crypto-js/components/aes.js"></script>
 		<script type="text/javascript" src="crypto-js/components/sha256.js"></script>
+		<script type="text/javascript" src="crypto-js_hex_formatter.js"></script>
 		<script type="text/javascript" src="jsenc.js"></script>
 		<style type="text/css">
 			fieldset
@@ -72,14 +73,6 @@
 			<fieldset>
 				<legend>Parameters</legend>
 				
-				<label for="encrypt_password">Password:</label>
-				<input type="text" id="param_password" value="" /><br/>
-				
-				<label for="encrypt_password2">Password again:</label>
-				<input type="text" id="param_password2" value="" /><br/>
-				
-				<hr/>
-				
 				<label for="param_algo">Password hashing algorithm:</label>
 				<select id="param_algo" readonly="readonly">
 					<option value="SHA256">SHA256</option>
@@ -112,6 +105,12 @@
 			<fieldset>
 				<legend>Encrypt</legend>
 				
+				<label for="encrypt_password">Password:</label>
+				<input type="text" id="encrypt_password" value="" /><br/>
+				
+				<label for="encrypt_password2">Password again:</label>
+				<input type="text" id="encrypt_password2" value="" /><br/>
+				
 				<label for="encrypt_data">Text to encrypt:</textarea>
 				<textarea id="encrypt_data"></textarea>
 				
@@ -121,7 +120,10 @@
 			<fieldset>
 				<legend>Decrypt</legend>
 				
-				<label for="decrypt_data">Text to decrypt:</textarea>
+				<label for="decrypt_password">Password:</label>
+				<input type="text" id="decrypt_password" value="" /><br/>
+				
+				<label for="decrypt_data">Data (JSON) to decrypt:</textarea>
 				<textarea id="decrypt_data"></textarea>
 				
 				<input type="button" value="load params and decrypt" onclick="decrypt();" /><br/>
