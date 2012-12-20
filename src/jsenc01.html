@@ -52,22 +52,35 @@
 		</style>
 	</head>
 	<body>
-		<h1>jsenc example</h1>
+		<h1>jsenc01 example</h1>
+		
+		<h2>About jsenc</h2>
 		
 		<p>
-<!--
-			<strong>jsenc</strong> is a JavaScript library to ... widely used hard disk encryption like <a href="http://en.wikipedia.org/wiki/Linux_Unified_Key_Setup">LUKS</a> and <a href="http://truecrypt.org/">TrueCrypt</a>. jsenc is using strongly using the <a href="http://code.google.com/p/crypto-js/">CryptoJS<a> library.
--->
-			<strong>jsenc</strong> is a JavaScript library to using standardized password hashing and encrypting methods used by softwares like <a href="http://en.wikipedia.org/wiki/Linux_Unified_Key_Setup">LUKS</a> and <a href="http://truecrypt.org/">TrueCrypt</a>. jsenc is strongly using the <a href="http://code.google.com/p/crypto-js/">CryptoJS<a> library.
+			<strong>jsenc</strong> is mostly patches and extensions to <a href="http://code.google.com/p/crypto-js/">CryptoJS</a> and also some test scripts to provide demos for their usage. For more info please see the <a href="http://github.com/gheja/jsenc">GitHub repository</a> or the <a href="index.html">index page</a>.
 		</p>
 		
 		<p>
-			All the cryptographic work (password hashing, data encryption/decryption) is done <strong>in your browser, no data is ever transmitted to a server</strong>, all the encryption/decryption is happening in this window. (This is the exact point of the library. After the page loads you can actually go offline and the page will still work.)
+			All the cryptographic work (password hashing, data encryption/decryption) is done <strong>in your browser, no data is ever transmitted to a server</strong>, all the encryption/decryption is happening in this window. This is the exact point of the library. After the page loads you can actually go offline and the page will still work.
 		</p>
 		
+		<h2>About the example</h2>
+		
 		<p>
-			Also, jsenc is open sourced, you can find it at <a href="http://github.com/gheja/jsenc">http://github.com/gheja/jsenc</a>.
+			This example provides the following:
 		</p>
+		
+		<ul>
+			<li>text (or arbitary data) encryption using AES</li>
+			<li>key derivation from a password</li>
+			<li>SHA256 password hashing with configurable iterations</li>
+			<li>SHA256 password hashing with configurable salt</li>
+			<li>configurable AES IV (initialization vector)</li>
+			<li>JSON output of the encrypted data and parameters, <strong>but the password is not included</strong></li>
+			<li>JSON input handlig for decryption</li>
+		</ul>
+		
+		<h2>Demo</h2>
 		
 		<div class="box">
 			<fieldset>
@@ -144,6 +157,6 @@
 		
 		<hr class="clearer" />
 		
-		<a href="http://github.com/gheja/jsenc">http://github.com/gheja/jsenc</a>
+		<a href="http://github.com/gheja/jsenc">http://github.com/gheja/jsenc</a> | <a href="index.html">back</a>
 	</body>
 </html>
