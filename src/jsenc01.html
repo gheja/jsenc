@@ -102,13 +102,13 @@
 					<option value="AES">AES</option>
 				</select><br/>
 				
-				<label for="param_encoding">Output encoding:</label>
+				<label for="param_iv">Cipher IV (initialization vector):</label>
+				<input type="text" id="param_iv" value="" /><br/>
+				
+				<label for="param_encoding">Salt, IV, data encoding:</label>
 				<select id="param_encoding" readonly="readonly">
 					<option value="hex">hex</option>
 				</select><br/>
-				
-				<label for="param_iv">Cipher IV (initialization vector):</label>
-				<input type="text" id="param_iv" value="" /><br/>
 				
 				<input type="button" value="randomize" onclick="randomize_parameters();" /><br/>
 			</fieldset>
