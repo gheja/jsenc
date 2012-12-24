@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>jsenc02 example</title>
+		<title>jsenc02 example - the TKE extension for CryptoJS</title>
 		<script type="text/javascript" src="crypto-js/components/core.js"></script>
 		<script type="text/javascript" src="crypto-js/components/enc-base64.js"></script>
 		<script type="text/javascript" src="crypto-js/components/hmac.js"></script>
@@ -11,6 +11,7 @@
 		<script type="text/javascript" src="crypto-js/components/aes.js"></script>
 		<script type="text/javascript" src="crypto-js/components/sha256.js"></script>
 		<script type="text/javascript" src="crypto-js_hex_formatter.js"></script>
+		<script type="text/javascript" src="crypto-js_tke.js"></script>
 		<script type="text/javascript" src="jsenc02.js"></script>
 		<style type="text/css">
 			fieldset
@@ -39,6 +40,13 @@
 				width: 100%;
 			}
 			
+			input[readonly=readonly],
+			select[readonly=readonly],
+			textarea[readonly=readonly]
+			{
+				background: #cccccc;
+			}
+			
 			textarea
 			{
 				height: 150px;
@@ -57,7 +65,7 @@
 		</style>
 	</head>
 	<body>
-		<h1>jsenc02 example - WORK IN PROGRESS</h1>
+		<h1>jsenc02 example - the TKE extension for CryptoJS (WORK IN PROGRESS)</h1>
 		
 		<h2>About jsenc</h2>
 		
@@ -72,23 +80,19 @@
 		<h2>About the example</h2>
 		
 		<p>
-			<strong>This example is in a "work in progress" state, most likely it will change and may not work now.</strong>
+			<strong>This example is in a "work in progress" state, most likely it will change and somethimes may simply not work.</strong>
 		</p>
 		
 		<p>
-			<strong>jsenc</strong> is a JavaScript library to create a secure container with <strong>two key encryption scheme</strong> used by disk encryption softwares like <a href="http://en.wikipedia.org/wiki/Linux_Unified_Key_Setup">LUKS</a> and <a href="http://truecrypt.org/">TrueCrypt</a>. jsenc is based on the <a href="http://code.google.com/p/crypto-js/">CryptoJS<a> library and is an extension of it.
+			This example shows the usage of <strong>TKE (two key encryption) scheme extension </strong> for CryptoJS. This scheme is used by disk encryption softwares like <a href="http://en.wikipedia.org/wiki/Linux_Unified_Key_Setup">LUKS</a> and <a href="http://truecrypt.org/">TrueCrypt</a>.
 		</p>
 		
 		<p>
-			With the two key encryption scheme you can have your data encrypted with a <strong>"master key" dedicated to data encryption only</strong> (like traditional encryptions do) and instead of supplying the master key everytime, you set minimally an <strong>additional "user key" to encrypt the master key</strong> itself (this is the second key).
+			With the two key encryption scheme you can have your data encrypted with a <strong>"master key" dedicated to data encryption only</strong> (just like in other cases) and instead of supplying the master key everytime, you set (in the most basic situation) an <strong>additional "user key" to encrypt the master key</strong> itself (this is the second key).
 		</p>
 		
 		<p>
-			A great advantage lies in using two different keys: you can add another "user key" anytime or delete an existing one <strong>without touching your encrypted data</strong> (as that's encryption is done with the "master key", also you need to know one "user key" to decrypt the "master key" before). That is, you can have as many independent "user keys" as you want (i.e. users can have their very own keys for a common data) and in fact you don't need to remember the master key.
-		</p>
-		
-		<p>
-			Also, jsenc is open sourced, you can find it at <a href="http://github.com/gheja/jsenc">http://github.com/gheja/jsenc</a>.
+			A great advantage lies in using two different keys: you can add another "user key" anytime or delete an existing one <strong>without touching your encrypted data</strong> (as that's encryption is done with the "master key", also you need to know only one "user key" to decrypt the "master key" before). That is, you can have as many independent "user keys" as you want (i.e. users can have their very own keys for a common data) and in fact you don't need to remember the master key, which is generated randomly on the first use.
 		</p>
 		
 		<h2>planned JSON structure</h2>
@@ -96,115 +100,157 @@
 {
 	"keys": {
 		"0": {
-			"encoding": "hex",
-			"key_algo": "SHA256",
+			"encoding": "hex", /* 1 */
+			"key_algo": "SHA256", /* 1 */
 			"key_salt": "b3661cf591dce8a5f1c451a84a2f2d00",
 			"key_iterations": 2344,
-			"cipher": "AES",
+			"cipher": "AES", /* 1 */
 			"iv": "f591dce8a5f1c451a84a2f2d00b3661c",
-			"master_key_data": "dce8a5f1c451a84a2f2d00b3661cf591",
+			"master_key_data": "dce8a5f1c451a84a2f2d00b3661cf591" /* 2 */
 		},
 		"1": {
-			"encoding": "hex",
-			"key_algo": "SHA256",
+			"encoding": "hex", /* 1 */
+			"key_algo": "SHA256", /* 1 */
 			"key_salt": "1a84a2f2d00b3661cf591dce8a5f1c45",
 			"key_iterations": 5234,
-			"cipher": "AES",
+			"cipher": "AES", /* 1 */
 			"iv": "8a5f1c451a84a2f2d00b3661cf591dce",
-			"master_key_data": "1a84a2f2d00b3661cf591dce8a5f1c45",
+			"master_key_data": "1a84a2f2d00b3661cf591dce8a5f1c45" /* 2 */
 		}
 	},
-	"encoding": "hex",
+	"encoding": "hex", /* 1 */
 	"data": "bcc40c60afa8267e9f615b9f5ec9391abcc40c60afa8267e9f615b9f5ec9391abcc40c60afa8267e9f615b9f5ec9391a"
 }
+
+1: these parameters cannot be changed at the moment, default values are set above, anything else will be ignored
+2: contains the "master key" parameters (cipher, key, iv) encrypted with the "user key"
 </pre>
-		
-		<div class="box">
-			<h3>Master key and key slots</h3>
-			
-			<fieldset>
-				<legend>Generate master key</legend>
-				
-				<label for="encrypt_password">Master key:</label>
-				<input type="text" id="param_password" value="" /><br/>
-				
-				<input type="button" value="generate" onclick="randomize_parameters();" /><br/>
-			</fieldset>
-			
-			<fieldset>
-				<legend>Add key</legend>
-				
-				<label for="encrypt_password">Password:</label>
-				<input type="text" id="param_password" value="" class="user" /><br/>
-				
-				<label for="encrypt_password2">Password again:</label>
-				<input type="text" id="param_password2" value="" class="user" /><br/>
-				
-				<hr/>
-				
-				<label for="encrypt_password2">Key slot ID:</label>
-				<input type="text" id="param_password2" value="" /><br/>
-				
-				<label for="param_algo">Password hashing algorithm:</label>
-				<select id="param_algo" readonly="readonly">
-					<option value="SHA256">SHA256</option>
-				</select><br/>
-				
-				<label for="param_iterations">Password hashing iterations:</label>
-				<input type="text" id="param_iterations" value="" /><br/>
-				
-				<label for="param_salt">Password salt:</label>
-				<input type="text" id="param_salt" value="" /><br/>
-				
-				<label for="param_cipher">Data encryption cipher:</label>
-				<select id="param_cipher" readonly="readonly">
-					<option value="AES">AES</option>
-				</select><br/>
-				
-				<label for="param_encoding">Output encoding:</label>
-				<select id="param_encoding" readonly="readonly">
-					<option value="hex">hex</option>
-				</select><br/>
-				
-				<label for="param_iv">Cipher IV (initialization vector):</label>
-				<input type="text" id="param_iv" value="" /><br/>
-				
-				<input type="button" value="randomize" onclick="randomize_parameters();" /><br/>
-			</fieldset>
-			
-			<fieldset>
-				<legend>Remove key</legend>
-				
-				<label for="encrypt_password">Key slot ID:</label>
-				<input type="text" id="" value="0" /><br/>
-				
-				<input type="button" value="remove" onclick="" /><br/>
-			</fieldset>
-		</div>
+		<h2>All the details</h2>
 		
 		<div class="box">
 			<h3>Container management</h3>
 			
 			<fieldset>
-				<legend>Open container</legend>
+				<legend>Generate a new container</legend>
 				
-				<label for="encrypt_data">Container data:</textarea>
-				<textarea id="encrypt_data"></textarea>
-				
-				<label for="encrypt_password">Password:</label>
-				<input type="text" id="param_password" value="" class="user" /><br/>
-				
-				<input type="button" value="open" onclick="" />
+				<input type="button" value="generate" onclick="container_generate();" />
 			</fieldset>
 			
 			<fieldset>
-				<legend>View/edit data</legend>
+				<legend>Open container</legend>
 				
-				<label for="encrypt_data">Data</textarea>
-				<textarea id="encrypt_data"></textarea>
+				<label for="container_open_data">Container data (JSON encoded):</label>
+				<textarea id="container_open_data"></textarea>
 				
-				<input type="button" value="save and close" onclick="" />
-				<input type="button" value="close without saving" onclick="" />
+				<label for="container_open_password">Password:</label>
+				<input type="text" id="container_open_password" value="" class="user" /><br/>
+				
+				<input type="button" value="open" onclick="container_open();" />
+			</fieldset>
+			
+			<fieldset>
+				<legend>Current container (read-only)</legend>
+				
+				<label for="container_current_data">Container data (JSON encoded):</label>
+				<textarea id="container_current_data" readonly="readonly"></textarea>
+				
+				<label for="container_current_status">Container status:</label>
+				<input type="text" id="container_current_status" value="Container is empty." readonly="readonly" /><br/>
+			</fieldset>
+			
+			<fieldset>
+				<legend>Manage current container</legend>
+				
+				<input type="button" value="close" onclick="container_close();" />
+				<input type="button" value="reset" onclick="container_reset();" />
+			</fieldset>
+		</div>
+		
+		<div class="box">
+			<h3>Master key and key slots</h3>
+			
+			<fieldset>
+				<legend>Master key (read-only)</legend>
+				
+<!--
+				<label for="master_key_password">Master key:</label>
+				<input type="text" id="master_key_password" value="" readonly="readonly" /><br/>
+				
+				<label for="master_key_algo">Hashing algorithm:</label>
+				<select id="master_key_algo" readonly="readonly">
+					<option value="SHA256">SHA256</option>
+				</select><br/>
+				
+				<label for="master_key_iterations">Hashing iterations:</label>
+				<input type="text" id="master_key_iterations" value="" readonly="readonly" /><br/>
+				
+				<label for="master_key_salt">Hashing salt:</label>
+				<input type="text" id="master_key_salt" value="" readonly="readonly" /><br/>
+				
+-->
+				<label for="master_key_cipher">Cipher:</label>
+				<select id="master_key_cipher" readonly="readonly">
+					<option value="AES">AES</option>
+				</select><br/>
+				
+				<label for="master_key_key">Cipher key:</label>
+				<input type="text" id="master_key_key" value="" readonly="readonly" /><br/>
+				
+				<label for="master_key_iv">Cipher IV (initialization vector):</label>
+				<input type="text" id="master_key_iv" value="" readonly="readonly" /><br/>
+				
+				<label for="master_key_encoding">Output encoding:</label>
+				<select id="master_key_encoding" readonly="readonly">
+					<option value="hex">hex</option>
+				</select><br/>
+			</fieldset>
+			
+			<fieldset>
+				<legend>Add key</legend>
+				
+				<label for="user_key_password">Password:</label>
+				<input type="text" id="user_key_password" value="" class="user" /><br/>
+				
+				<label for="user_key_password2">Password again:</label>
+				<input type="text" id="user_key_password2" value="" class="user" /><br/>
+				
+				<hr/>
+				
+				<label for="user_key_algo">Password hashing algorithm:</label>
+				<select id="user_key_algo" readonly="readonly">
+					<option value="SHA256">SHA256</option>
+				</select><br/>
+				
+				<label for="user_key_salt">Password salt:</label>
+				<input type="text" id="user_key_salt" value="" /><br/>
+				
+				<label for="user_key_iterations">Password hashing iterations:</label>
+				<input type="text" id="user_key_iterations" value="" /><br/>
+				
+				<label for="user_key_cipher">Password encryption cipher:</label>
+				<select id="user_key_cipher" readonly="readonly">
+					<option value="AES">AES</option>
+				</select><br/>
+				
+				<label for="user_key_iv">Cipher IV (initialization vector):</label>
+				<input type="text" id="user_key_iv" value="" /><br/>
+				
+				<label for="user_key_encoding">Output encoding:</label>
+				<select id="user_key_encoding" readonly="readonly">
+					<option value="hex">hex</option>
+				</select><br/>
+				
+				<input type="button" value="randomize" onclick="user_key_randomize();" />
+				<input type="button" value="add" onclick="user_key_add();" /><br/>
+			</fieldset>
+			
+			<fieldset>
+				<legend>Remove key</legend>
+				
+				<label for="user_key_remove_id">Key slot ID:</label>
+				<input type="text" id="user_key_remove_id" value="0" /><br/>
+				
+				<input type="button" value="remove" onclick="user_key_remove();" /><br/>
 			</fieldset>
 		</div>
 		
@@ -212,10 +258,13 @@
 			<h3>Data management</h3>
 			
 			<fieldset>
-				<legend>Current container data:</legend>
+				<legend>Current data:</legend>
 				
-				<label for="encrypt_data">Container data (output):</textarea>
-				<textarea id="encrypt_data"></textarea>
+				<label for="current_data_data">Current data:</label>
+				<textarea id="current_data_data"></textarea>
+				
+				<input type="button" value="save changes" onclick="current_data_save();" />
+				<input type="button" value="discard changes" onclick="current_data_discard();" /><br/>
 			</fieldset>
 		</div>
 		

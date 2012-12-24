@@ -1,0 +1,203 @@
+CryptoJS.TKE || (function (undefined) {
+	var C = CryptoJS;
+	var C_lib = C.lib;
+	var Base = C_lib.Base;
+	var WordArray = C_lib.WordArray;
+	var BufferedBlockAlgorithm = C_lib.BufferedBlockAlgorithm;
+	var C_enc = C.enc;
+	var Utf8 = C_enc.Utf8;
+	var Base64 = C_enc.Base64;
+	var Hex = C_enc.Hex;
+	var C_algo = C.algo;
+	var EvpKDF = C_algo.EvpKDF;
+	var C_format = C.format;
+	
+	var C_TKE = C.TKE = {
+		containerIsOpen: false,
+		masterKey: {
+			cipher: null,
+			key: null,
+			iv: null
+		},
+		keys: [],
+		keySlotUsed: null,
+		data: null,
+		
+		_setMasterKey: function(cfg)
+		{
+			if (this.data != null)
+			{
+				throw new Error("Cannot set master key as container already holds data, you may want to reset() the container.");
+			}
+			
+			this.masterKey = cfg;
+			this.containerIsOpen = true;
+		},
+		
+		_clearMasterKey: function()
+		{
+			this.masterKey = { cipher: null, key: null, iv: null };
+			this.containerIsOpen = false;
+		},
+		
+		addKey: function(algo, key, salt, iterations, cipher, iv)
+		{
+			if (!this.containerIsOpen && this.data != null)
+			{
+				throw new Error("Cannot add key. Data present but container is not open.");
+			}
+			
+			var key256Bits = CryptoJS.PBKDF2(key, CryptoJS.enc.Hex.parse(salt), { keySize: 256/32, iterations: iterations, hasher: CryptoJS.algo.SHA256 });
+			var a = CryptoJS.AES.encrypt(JSON.stringify(this.masterKey), key256Bits, { iv: CryptoJS.enc.Hex.parse(iv), format: CryptoJS.format.Hex });
+			this.keys[this.keys.length] = {
+				encoding: "hex",
+				algo: "SHA256",
+				salt: salt,
+				iterations: iterations,
+				cipher: "AES",
+				iv: iv,
+				master_key_data: a
+			};
+			
+			return true;
+		},
+		
+		addPassword: function(algo, password, salt, iterations, cipher, iv)
+		{
+			if (!this.containerIsOpen && this.data != null)
+			{
+				throw new Error("Cannot add key. Data present but container is not open.");
+			}
+			return this.addKey(algo, CryptoJS.enc.Utf8.parse(password), salt, iterations, cipher, iv);
+		},
+		
+		removeKeySlot: function(keySlotId)
+		{
+			if (!this.containerIsOpen)
+			{
+				throw new Error("Cannot remove key, container is not open.");
+			}
+			
+			if (this.keySlotUsed == keySlotId)
+			{
+				throw new Error("Cannot remove active keyslot.");
+			}
+			
+			if (!this.keys[keySlotId])
+			{
+				throw new Error("Selected keyslot is not set.");
+			}
+			
+			this.keys[keySlotId] = null;
+			
+			return true;
+		},
+		
+		create: function()
+		{
+//			if (this.data != null)
+//			{
+//				throw new Error("Container already holds data, you may want to reset() it first.");
+//			}
+			
+			this.masterKey = {
+				cipher: "AES",
+				key: CryptoJS.lib.WordArray.random(256/8),
+				iv: CryptoJS.lib.WordArray.random(128/8)
+			};
+			this.containerIsOpen = true;
+			this.keys = [];
+			this.setContainerData("");
+		},
+		
+		load: function(keyslots, data)
+		{
+			this.keys = keyslots;
+			this.data = data;
+		},
+		
+		open: function(password)
+		{
+			var i;
+			var key256Bits;
+			var possibleKeyData;
+			
+			for (i=0; i<this.keys.length; i++)
+			{
+				try
+				{
+					var key256Bits = CryptoJS.PBKDF2(password, CryptoJS.enc.Hex.parse(this.keys[i].salt), { keySize: 256/32, iterations: this.keys[i].iterations, hasher: CryptoJS.algo.SHA256 });
+					possibleKeyData = CryptoJS.AES.decrypt(this.keys[i].data, key256Bits, { iv: CryptoJS.enc.Hex.parse(this.keys[i].iv), format: CryptoJS.format.Hex }).toString(CryptoJS.enc.Utf8);
+					
+					// TODO: destory key256Bits before the eval() can fail
+					eval("(" + possibleKeyData + ")");
+					this._setMasterKey(possibleKeyData);
+					this._decryptData();
+					
+					// TODO: destroy possibleKeyData
+					
+					this.keySlotUsed = i;
+					alert("Opened container with key #" + i);
+					
+					return true;
+				}
+				catch (e)
+				{
+				}
+			}
+			
+			return false;
+		},
+		
+		close: function()
+		{
+			this._clearMasterKey();
+			this.keySlotUsed = null;
+		},
+		
+		getContainerData: function()
+		{
+			var key256Bits;
+			var decryptedData;
+			
+			if (!this.containerIsOpen)
+			{
+				throw new Error("Container is not open.");
+			}
+			
+			key256Bits = CryptoJS.PBKDF2(this.masterKey.password, CryptoJS.enc.Hex.parse(this.masterKey.salt), { keySize: 256/32, iterations: this.masterKey.iterations, hasher: CryptoJS.algo.SHA256 });
+			decryptedData = CryptoJS.AES.decrypt(this.data, key256Bits, { iv: CryptoJS.enc.Hex.parse(this.masterKey.iv), format: CryptoJS.format.Hex }).toString(CryptoJS.enc.Utf8);
+			
+			// TODO: destory key256Bits
+			
+			return decryptedData;
+		},
+		
+		setContainerData: function(data)
+		{
+			var key256Bits;
+			
+			if (!this.containerIsOpen)
+			{
+				throw new Error("Container is not open.");
+			}
+			
+			this.data = CryptoJS.AES.encrypt(data, this.masterKey.key, { iv: CryptoJS.enc.Hex.parse(this.masterKey.iv), format: CryptoJS.format.Hex });
+			
+			// TODO: destory anything?
+			
+			return true;
+		},
+		
+		reset: function()
+		{
+			this.close();
+			this.data = null;
+		},
+		
+		getJson: function()
+		{
+			
+		}
+	}
+}());
