@@ -7,6 +7,7 @@ function _update_container_data()
 	document.getElementById("master_key_iv").value = _container.masterKey.iv;
 	
 //	document.getElementById("container_current_data").value = JSON.stringify(_container);
+/*
 	var i;
 	var s = "{\n";
 	s += "\tkeys: [\n";
@@ -43,6 +44,8 @@ function _update_container_data()
 	s += "\t\"data\": \"" + _container.data + "\"\n";
 	s += "}\n";
 	document.getElementById("container_current_data").value = s;
+*/
+	document.getElementById("container_current_data").value = _container.getJson();
 }
 
 function container_generate()

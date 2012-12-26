@@ -197,7 +197,33 @@ CryptoJS.TKE || (function (undefined) {
 		
 		getJson: function()
 		{
+			var i;
+			var json = {
+				keys: [],
+				encoding: "hex",
+				data: this.data.toString()
+			};
 			
+			for (i=0; i<this.keys.length; i++)
+			{
+				if (this.keys[i] == null)
+				{
+					json.keys[i] = {};
+				}
+				else
+				{
+					json.keys[i] = {
+						encoding: "hex",
+						algo: "SHA256",
+						salt: this.keys[i].salt,
+						iterations: this.keys[i].iterations,
+						cipher: "AES",
+						iv: this.keys[i].iv
+					};
+				}
+			}
+			
+			return JSON.stringify(json);
 		}
 	}
 }());
