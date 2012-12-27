@@ -146,7 +146,6 @@ CryptoJS.TKE || (function (undefined) {
 					// TODO: destory key256Bits before the eval() can fail
 					eval("(" + possibleKeyData + ")");
 					this._setMasterKey(possibleKeyData);
-					this._decryptData();
 					
 					// TODO: destroy possibleKeyData
 					
