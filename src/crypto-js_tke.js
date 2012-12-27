@@ -135,6 +135,7 @@ CryptoJS.TKE || (function (undefined) {
 			var i;
 			var key256Bits;
 			var possibleKeyData;
+			var json;
 			
 			for (i=0; i<this.keys.length; i++)
 			{
@@ -145,7 +146,7 @@ CryptoJS.TKE || (function (undefined) {
 					
 					try
 					{
-						eval("(" + possibleKeyData + ")");
+						json = eval("(" + possibleKeyData + ")");
 						eval_successful = true;
 					}
 					catch (e)
@@ -155,7 +156,7 @@ CryptoJS.TKE || (function (undefined) {
 						continue;
 					}
 					
-					this._setMasterKey(possibleKeyData);
+					this._setMasterKey(json);
 					
 					this.keySlotUsed = i;
 					alert("Opened container with key #" + i);
