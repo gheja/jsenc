@@ -88,6 +88,20 @@ CryptoJS.TKE || (function (undefined) {
 				throw new Error("Selected keyslot is not set.");
 			}
 			
+			var i;
+			var count = 0;
+			for (i=0; i<this.keys.length; i++)
+			{
+				if (this.keys[i] != null)
+				{
+					count++;
+				}
+			}
+			if (count < 2)
+			{
+				throw new Error("Cannot delete the only key.");
+			}
+			
 			this.keys[keySlotId] = null;
 			
 			return true;
