@@ -159,7 +159,6 @@ CryptoJS.TKE || (function (undefined) {
 					this._setMasterKey(json);
 					
 					this.keySlotUsed = i;
-					alert("Opened container with key #" + i);
 					
 					return true;
 				}
