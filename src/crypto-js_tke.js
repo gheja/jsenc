@@ -218,7 +218,8 @@ CryptoJS.TKE || (function (undefined) {
 						salt: this.keys[i].salt,
 						iterations: this.keys[i].iterations,
 						cipher: "AES",
-						iv: this.keys[i].iv
+						iv: this.keys[i].iv,
+						master_key_data: this.keys[i].master_key_data.toString()
 					};
 				}
 			}
