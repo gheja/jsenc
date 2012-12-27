@@ -50,7 +50,18 @@ function container_load()
 
 function container_open()
 {
-	alert("container_open()");
+	try
+	{
+		if (_container.open(document.getElementById("container_open_password").value))
+		{
+			_update_container_data();
+			current_data_discard();
+		}
+	}
+	catch (e)
+	{
+		alert(e);
+	}
 }
 
 function container_close()
