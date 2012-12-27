@@ -167,5 +167,11 @@ function current_data_save()
 
 function current_data_discard()
 {
-	alert("current_data_discard()");
+	try {
+		document.getElementById("current_data_data").value = _container.getContainerData();
+	}
+	catch (e)
+	{
+		alert(e);
+	}
 }
