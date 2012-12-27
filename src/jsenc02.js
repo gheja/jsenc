@@ -2,6 +2,18 @@ var _container;
 
 function _update_container_data()
 {
+	if (_container === undefined || _container.data === undefined)
+	{
+		document.getElementById("container_current_status").value = "Container is empty.";
+	}
+	else if (_container.containerIsOpen)
+	{
+		document.getElementById("container_current_status").value = "Container is open, " + (_container.keys.length == 0 ? "no keys defined" : _container.keys.length + " key(s) defined.");
+	}
+	else
+	{
+		document.getElementById("container_current_status").value = "Container is not open.";
+	}
 // 	document.getElementById("master_key_cipher").value = _container.masterKey.cipher;
 	document.getElementById("master_key_key").value = _container.masterKey.key;
 	document.getElementById("master_key_iv").value = _container.masterKey.iv;
