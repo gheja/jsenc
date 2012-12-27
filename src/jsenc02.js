@@ -14,8 +14,8 @@ function _update_container_data()
 	{
 		document.getElementById("container_current_status").value = "Container is not open.";
 	}
-	document.getElementById("master_key_key").value = _container.masterKey.key;
-	document.getElementById("master_key_iv").value = _container.masterKey.iv;
+	document.getElementById("master_key_key").value = _container.masterKey.key ? _container.masterKey.key : "n/a";
+	document.getElementById("master_key_iv").value = _container.masterKey.iv ? _container.masterKey.iv : "n/a";
 	
 	document.getElementById("container_current_data").value = _container.getJson();
 }
@@ -36,8 +36,18 @@ function container_generate()
 
 function container_open()
 {
-	alert("container_open()");
+	try
+	{
+		_container = CryptoJS.TKE;
+		_container.setJson(document.getElementById("container_open_data").value);
+		_update_container_data();
+	}
+	catch (e)
+	{
+		alert(e);
+	}
 }
+
 function container_close()
 {
 	try

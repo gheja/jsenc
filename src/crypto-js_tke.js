@@ -225,6 +225,24 @@ CryptoJS.TKE || (function (undefined) {
 			}
 			
 			return JSON.stringify(json);
+		},
+		
+		setJson: function(jsonString)
+		{
+			var json;
+			
+			if (typeof jsonString == "string")
+			{
+				json = eval("(" + jsonString + ")");
+				// this may throw an error, we do not want to interfere
+			}
+			else
+			{
+				json = jsonString;
+			}
+			this.data = json.data;
+			this.encoding = json.encoding;
+			this.keys = json.keys;
 		}
 	}
 }());
