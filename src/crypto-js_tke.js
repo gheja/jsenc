@@ -179,7 +179,6 @@ CryptoJS.TKE || (function (undefined) {
 		
 		getContainerData: function()
 		{
-			var key256Bits;
 			var decryptedData;
 			
 			if (!this.containerIsOpen)
@@ -187,26 +186,19 @@ CryptoJS.TKE || (function (undefined) {
 				throw new Error("Container is not open.");
 			}
 			
-			key256Bits = CryptoJS.PBKDF2(this.masterKey.password, CryptoJS.enc.Hex.parse(this.masterKey.salt), { keySize: 256/32, iterations: this.masterKey.iterations, hasher: CryptoJS.algo.SHA256 });
-			decryptedData = CryptoJS.AES.decrypt(this.data, key256Bits, { iv: CryptoJS.enc.Hex.parse(this.masterKey.iv), format: CryptoJS.format.Hex }).toString(CryptoJS.enc.Utf8);
-			
-			// TODO: destory key256Bits
+			decryptedData = CryptoJS.AES.decrypt(this.data, this.masterKey.key, { iv: CryptoJS.enc.Hex.parse(this.masterKey.iv), format: CryptoJS.format.Hex }).toString(CryptoJS.enc.Utf8);
 			
 			return decryptedData;
 		},
 		
 		setContainerData: function(data)
 		{
-			var key256Bits;
-			
 			if (!this.containerIsOpen)
 			{
 				throw new Error("Container is not open.");
 			}
 			
 			this.data = CryptoJS.AES.encrypt(data, this.masterKey.key, { iv: CryptoJS.enc.Hex.parse(this.masterKey.iv), format: CryptoJS.format.Hex });
-			
-			// TODO: destory anything?
 			
 			return true;
 		},
