@@ -141,7 +141,7 @@ CryptoJS.TKE || (function (undefined) {
 				try
 				{
 					var key256Bits = CryptoJS.PBKDF2(password, CryptoJS.enc.Hex.parse(this.keys[i].salt), { keySize: 256/32, iterations: this.keys[i].iterations, hasher: CryptoJS.algo.SHA256 });
-					possibleKeyData = CryptoJS.AES.decrypt(this.keys[i].data, key256Bits, { iv: CryptoJS.enc.Hex.parse(this.keys[i].iv), format: CryptoJS.format.Hex }).toString(CryptoJS.enc.Utf8);
+					possibleKeyData = CryptoJS.AES.decrypt(this.keys[i].master_key_data, key256Bits, { iv: CryptoJS.enc.Hex.parse(this.keys[i].iv), format: CryptoJS.format.Hex }).toString(CryptoJS.enc.Utf8);
 					
 					// TODO: destory key256Bits before the eval() can fail
 					eval("(" + possibleKeyData + ")");
