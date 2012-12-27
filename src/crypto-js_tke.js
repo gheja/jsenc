@@ -25,9 +25,9 @@ CryptoJS.TKE || (function (undefined) {
 		
 		_setMasterKey: function(cfg)
 		{
-			if (this.data != null)
+			if (this.data != null && this.containerIsOpen)
 			{
-				throw new Error("Cannot set master key as container already holds data, you may want to reset() the container.");
+				throw new Error("Cannot set master key as container already holds data and is open, you may want to close() and reset() the container.");
 			}
 			
 			this.masterKey = cfg;
