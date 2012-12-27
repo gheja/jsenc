@@ -143,11 +143,19 @@ CryptoJS.TKE || (function (undefined) {
 					var key256Bits = CryptoJS.PBKDF2(password, CryptoJS.enc.Hex.parse(this.keys[i].salt), { keySize: 256/32, iterations: this.keys[i].iterations, hasher: CryptoJS.algo.SHA256 });
 					possibleKeyData = CryptoJS.AES.decrypt(this.keys[i].master_key_data, key256Bits, { iv: CryptoJS.enc.Hex.parse(this.keys[i].iv), format: CryptoJS.format.Hex }).toString(CryptoJS.enc.Utf8);
 					
-					// TODO: destory key256Bits before the eval() can fail
-					eval("(" + possibleKeyData + ")");
-					this._setMasterKey(possibleKeyData);
+					try
+					{
+						eval("(" + possibleKeyData + ")");
+						eval_successful = true;
+					}
+					catch (e)
+					{
+						key256Bits = null;
+						possibleKeyData = null;
+						continue;
+					}
 					
-					// TODO: destroy possibleKeyData
+					this._setMasterKey(possibleKeyData);
 					
 					this.keySlotUsed = i;
 					alert("Opened container with key #" + i);
@@ -156,6 +164,7 @@ CryptoJS.TKE || (function (undefined) {
 				}
 				catch (e)
 				{
+					throw new Error("CryptoJS.TKE.open() failed with error: " + e);
 				}
 			}
 			
