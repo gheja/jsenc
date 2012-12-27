@@ -116,8 +116,8 @@ CryptoJS.TKE || (function (undefined) {
 			
 			this.masterKey = {
 				cipher: "AES",
-				key: CryptoJS.lib.WordArray.random(256/8),
-				iv: CryptoJS.lib.WordArray.random(128/8)
+				key: CryptoJS.lib.WordArray.random(256/8).toString(),
+				iv: CryptoJS.lib.WordArray.random(128/8).toString()
 			};
 			this.containerIsOpen = true;
 			this.keys = [];
