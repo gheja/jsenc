@@ -208,7 +208,7 @@ CryptoJS.TKE || (function (undefined) {
 			{
 				if (this.keys[i] == null)
 				{
-					json.keys[i] = {};
+					json.keys[i] = null;
 				}
 				else
 				{
