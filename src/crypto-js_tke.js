@@ -201,7 +201,7 @@ CryptoJS.TKE || (function (undefined) {
 			var json = {
 				keys: [],
 				encoding: "hex",
-				data: this.data.toString()
+				data: (this.data ? this.data.toString() : null)
 			};
 			
 			for (i=0; i<this.keys.length; i++)
