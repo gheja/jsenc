@@ -8,7 +8,7 @@ function _update_container_data()
 	}
 	else if (_container.containerIsOpen)
 	{
-		document.getElementById("container_current_status").value = "Container is open, " + (_container.keys.length == 0 ? "no keys defined" : _container.keys.length + " key(s) defined.");
+		document.getElementById("container_current_status").value = "Container is open, " + (_container.keys.length == 0 ? "no keys, " : _container.keys.length + " key(s), ") + (_container.keySlotUsed !== null ? "keyslot #" + _container.keySlotUsed + " is in use." : "unknown keyslot is in use.");
 	}
 	else
 	{
