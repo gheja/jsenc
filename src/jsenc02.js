@@ -34,7 +34,7 @@ function container_generate()
 	}
 }
 
-function container_open()
+function container_open_load()
 {
 	try
 	{
@@ -46,6 +46,11 @@ function container_open()
 	{
 		alert(e);
 	}
+}
+
+function container_open_open()
+{
+	alert("container_open_open()");
 }
 
 function container_close()

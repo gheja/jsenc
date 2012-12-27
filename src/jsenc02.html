@@ -142,10 +142,12 @@
 				<label for="container_open_data">Container data (JSON encoded):</label>
 				<textarea id="container_open_data"></textarea>
 				
+				<input type="button" value="load" onclick="container_open_load();" />
+				
 				<label for="container_open_password">Password:</label>
 				<input type="text" id="container_open_password" value="" class="user" /><br/>
 				
-				<input type="button" value="open" onclick="container_open();" />
+				<input type="button" value="open" onclick="container_open_open();" />
 			</fieldset>
 			
 			<fieldset>
