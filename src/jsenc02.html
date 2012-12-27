@@ -137,17 +137,12 @@
 			</fieldset>
 			
 			<fieldset>
-				<legend>Open container</legend>
+				<legend>Load an existing container</legend>
 				
-				<label for="container_open_data">Container data (JSON encoded):</label>
-				<textarea id="container_open_data"></textarea>
+				<label for="container_load_data">Container data (JSON encoded):</label>
+				<textarea id="container_load_data"></textarea>
 				
-				<input type="button" value="load" onclick="container_open_load();" />
-				
-				<label for="container_open_password">Password:</label>
-				<input type="text" id="container_open_password" value="" class="user" /><br/>
-				
-				<input type="button" value="open" onclick="container_open_open();" />
+				<input type="button" value="load" onclick="container_load();" />
 			</fieldset>
 			
 			<fieldset>
@@ -162,6 +157,13 @@
 			
 			<fieldset>
 				<legend>Manage current container</legend>
+				
+				<label for="container_open_password">Password:</label>
+				<input type="text" id="container_open_password" value="" class="user" /><br/>
+				
+				<input type="button" value="open" onclick="container_open();" />
+				
+				<hr/>
 				
 				<input type="button" value="close" onclick="container_close();" />
 				<input type="button" value="reset" onclick="container_reset();" />

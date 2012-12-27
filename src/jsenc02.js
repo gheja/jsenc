@@ -34,12 +34,12 @@ function container_generate()
 	}
 }
 
-function container_open_load()
+function container_load()
 {
 	try
 	{
 		_container = CryptoJS.TKE;
-		_container.setJson(document.getElementById("container_open_data").value);
+		_container.setJson(document.getElementById("container_load_data").value);
 		_update_container_data();
 	}
 	catch (e)
@@ -48,9 +48,9 @@ function container_open_load()
 	}
 }
 
-function container_open_open()
+function container_open()
 {
-	alert("container_open_open()");
+	alert("container_open()");
 }
 
 function container_close()
