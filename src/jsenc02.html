@@ -131,6 +131,16 @@
 			<h3>Container management</h3>
 			
 			<fieldset>
+				<legend>Current container (read-only)</legend>
+				
+				<label for="container_current_data">Container data (JSON encoded):</label>
+				<textarea id="container_current_data" readonly="readonly"></textarea>
+				
+				<label for="container_current_status">Container status:</label>
+				<input type="text" id="container_current_status" value="Container is empty." readonly="readonly" /><br/>
+			</fieldset>
+			
+			<fieldset>
 				<legend>Generate a new container</legend>
 				
 				<input type="button" value="generate" onclick="container_generate();" />
@@ -143,16 +153,6 @@
 				<textarea id="container_load_data"></textarea>
 				
 				<input type="button" value="load" onclick="container_load();" />
-			</fieldset>
-			
-			<fieldset>
-				<legend>Current container (read-only)</legend>
-				
-				<label for="container_current_data">Container data (JSON encoded):</label>
-				<textarea id="container_current_data" readonly="readonly"></textarea>
-				
-				<label for="container_current_status">Container status:</label>
-				<input type="text" id="container_current_status" value="Container is empty." readonly="readonly" /><br/>
 			</fieldset>
 			
 			<fieldset>
