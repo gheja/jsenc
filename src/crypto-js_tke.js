@@ -47,16 +47,23 @@ CryptoJS.TKE || (function (undefined) {
 				throw new Error("Cannot add key. Data present but container is not open.");
 			}
 			
+			/* master key data to be stored as string (strip the unneded things, store values in hexadecimal form) */
+			var masterKeyAsString = JSON.stringify({
+				cipher: this.masterKey.cipher,
+				key: this.masterKey.key.toString(CryptoJS.enc.Hex),
+				iv: this.masterKey.iv.toString(CryptoJS.enc.Hex)
+			});
+			
 			var key256Bits = CryptoJS.PBKDF2(key, CryptoJS.enc.Hex.parse(salt), { keySize: 256/32, iterations: iterations, hasher: CryptoJS.algo.SHA256 });
-			var a = CryptoJS.AES.encrypt(JSON.stringify(this.masterKey), key256Bits, { iv: CryptoJS.enc.Hex.parse(iv), format: CryptoJS.format.Hex });
+			var masterKeyData = CryptoJS.AES.encrypt(masterKeyAsString, key256Bits, { iv: CryptoJS.enc.Hex.parse(iv), format: CryptoJS.format.Hex });
 			this.keys[this.keys.length] = {
 				encoding: "hex",
 				algo: "SHA256",
-				salt: salt,
+				salt: CryptoJS.enc.Hex.parse(salt),
 				iterations: iterations,
 				cipher: "AES",
-				iv: iv,
-				master_key_data: a
+				iv: CryptoJS.enc.Hex.parse(iv),
+				master_key_data: masterKeyData
 			};
 			
 			return true;
@@ -116,8 +123,8 @@ CryptoJS.TKE || (function (undefined) {
 			
 			this.masterKey = {
 				cipher: "AES",
-				key: CryptoJS.lib.WordArray.random(256/8).toString(),
-				iv: CryptoJS.lib.WordArray.random(128/8).toString()
+				key: CryptoJS.lib.WordArray.random(256/8),
+				iv: CryptoJS.lib.WordArray.random(128/8)
 			};
 			this.containerIsOpen = true;
 			this.keys = [];
@@ -134,29 +141,32 @@ CryptoJS.TKE || (function (undefined) {
 		{
 			var i;
 			var key256Bits;
-			var possibleKeyData;
-			var json;
+			var masterKeyAsString;
+			var masterKeyAsJson;
+			var masterKey;
 			
 			for (i=0; i<this.keys.length; i++)
 			{
 				try
 				{
-					var key256Bits = CryptoJS.PBKDF2(password, CryptoJS.enc.Hex.parse(this.keys[i].salt), { keySize: 256/32, iterations: this.keys[i].iterations, hasher: CryptoJS.algo.SHA256 });
+					var key256Bits = CryptoJS.PBKDF2(password, this.keys[i].salt, { keySize: 256/32, iterations: this.keys[i].iterations, hasher: CryptoJS.algo.SHA256 });
 					try
 					{
-						possibleKeyData = CryptoJS.AES.decrypt(this.keys[i].master_key_data, key256Bits, { iv: CryptoJS.enc.Hex.parse(this.keys[i].iv), format: CryptoJS.format.Hex }).toString(CryptoJS.enc.Utf8);
-						
-						json = eval("(" + possibleKeyData + ")");
+						masterKeyAsString = CryptoJS.AES.decrypt(this.keys[i].master_key_data, key256Bits, { iv: this.keys[i].iv, format: CryptoJS.format.Hex }).toString(CryptoJS.enc.Utf8);
+						masterKeyAsJson = eval("(" + masterKeyAsString + ")");
+						masterKey = { cipher: masterKeyAsJson.cipher, key: CryptoJS.enc.Hex.parse(masterKeyAsJson.key), iv: CryptoJS.enc.Hex.parse(masterKeyAsJson.iv) };
 						eval_successful = true;
 					}
 					catch (e)
 					{
 						key256Bits = null;
-						possibleKeyData = null;
+						masterKeyAsString = null;
+						masterKeyAsJson = null;
+						masterKey = null;
 						continue;
 					}
 					
-					this._setMasterKey(json);
+					this._setMasterKey(masterKey);
 					
 					this.keySlotUsed = i;
 					
@@ -186,7 +196,7 @@ CryptoJS.TKE || (function (undefined) {
 				throw new Error("Container is not open.");
 			}
 			
-			decryptedData = CryptoJS.AES.decrypt(this.data, this.masterKey.key, { iv: CryptoJS.enc.Hex.parse(this.masterKey.iv), format: CryptoJS.format.Hex }).toString(CryptoJS.enc.Utf8);
+			decryptedData = CryptoJS.AES.decrypt(this.data, this.masterKey.key, { iv: this.masterKey.iv, format: CryptoJS.format.Hex }).toString(CryptoJS.enc.Utf8);
 			
 			return decryptedData;
 		},
@@ -198,7 +208,7 @@ CryptoJS.TKE || (function (undefined) {
 				throw new Error("Container is not open.");
 			}
 			
-			this.data = CryptoJS.AES.encrypt(data, this.masterKey.key, { iv: CryptoJS.enc.Hex.parse(this.masterKey.iv), format: CryptoJS.format.Hex });
+			this.data = CryptoJS.AES.encrypt(data, this.masterKey.key, { iv: this.masterKey.iv, format: CryptoJS.format.Hex }).toString();
 			
 			return true;
 		},
@@ -226,13 +236,14 @@ CryptoJS.TKE || (function (undefined) {
 				}
 				else
 				{
+					/* convert all the internal types (for salt, iv) to hex encoded strings */
 					json.keys[i] = {
 						encoding: "hex",
 						algo: "SHA256",
-						salt: this.keys[i].salt,
+						salt: this.keys[i].salt.toString(CryptoJS.enc.Hex),
 						iterations: this.keys[i].iterations,
 						cipher: "AES",
-						iv: this.keys[i].iv,
+						iv: this.keys[i].iv.toString(CryptoJS.enc.Hex),
 						master_key_data: this.keys[i].master_key_data.toString()
 					};
 				}
@@ -244,6 +255,7 @@ CryptoJS.TKE || (function (undefined) {
 		setJson: function(jsonString)
 		{
 			var json;
+			var i;
 			
 			if (typeof jsonString == "string")
 			{
@@ -254,9 +266,28 @@ CryptoJS.TKE || (function (undefined) {
 			{
 				json = jsonString;
 			}
-			this.data = json.data;
+			this.data = CryptoJS.enc.Hex.parse(json.data).toString();
 			this.encoding = json.encoding;
-			this.keys = json.keys;
+			this.keys = [];
+			for (i=0; i<json.keys.length; i++)
+			{
+				if (json.keys[i] == null)
+				{
+					this.keys[i] = null;
+				}
+				else
+				{
+					this.keys[i] = {
+						encoding: "hex",
+						algo: "SHA256",
+						salt: CryptoJS.enc.Hex.parse(json.keys[i].salt),
+						iterations: json.keys[i].iterations,
+						cipher: "AES",
+						iv: CryptoJS.enc.Hex.parse(json.keys[i].iv),
+						master_key_data: json.keys[i].master_key_data
+					};
+				}
+			}
 		}
 	}
 }());
