@@ -155,7 +155,6 @@ CryptoJS.TKE || (function (undefined) {
 						masterKeyAsString = CryptoJS.AES.decrypt(this.keys[i].master_key_data, key256Bits, { iv: this.keys[i].iv, format: CryptoJS.format.Hex }).toString(CryptoJS.enc.Utf8);
 						masterKeyAsJson = eval("(" + masterKeyAsString + ")");
 						masterKey = { cipher: masterKeyAsJson.cipher, key: CryptoJS.enc.Hex.parse(masterKeyAsJson.key), iv: CryptoJS.enc.Hex.parse(masterKeyAsJson.iv) };
-						eval_successful = true;
 					}
 					catch (e)
 					{
@@ -167,8 +166,12 @@ CryptoJS.TKE || (function (undefined) {
 					}
 					
 					this._setMasterKey(masterKey);
-					
 					this.keySlotUsed = i;
+					
+					key256Bits = null;
+					masterKeyAsString = null;
+					masterKeyAsJson = null;
+					masterKey = null;
 					
 					return true;
 				}
