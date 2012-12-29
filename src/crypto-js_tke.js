@@ -226,6 +226,7 @@ CryptoJS.TKE || (function (undefined) {
 		{
 			var i;
 			var json = {
+				version: 1,
 				keys: [],
 				encoding: "hex",
 				data: (this.data ? this.data.toString() : null)
@@ -269,6 +270,10 @@ CryptoJS.TKE || (function (undefined) {
 			{
 				json = jsonString;
 			}
+			if (json.version != 1)
+			{
+				throw new Error("Unknown version.");
+			}
 			this.data = CryptoJS.enc.Hex.parse(json.data).toString();
 			this.encoding = json.encoding;
 			this.keys = [];
@@ -291,6 +296,7 @@ CryptoJS.TKE || (function (undefined) {
 					};
 				}
 			}
+			return true;
 		}
 	}
 }());
