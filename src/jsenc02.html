@@ -98,35 +98,35 @@
 		<h2>JSON structure</h2>
 <pre>
 {
-	"version":1,
+	"version": 1,
 	"keys": [
 		{
-			"encoding":"hex", /* 1 */
-			"algo":"SHA256", /* 1 */
-			"salt":"a2b606e725eecb30a063c6e4faa259d4",
-			"iterations":"4574",
-			"cipher":"AES", /* 1 */
-			"iv":"6a20dbd79f1a69c0464f5bc3fc62aa88",
-			"master_key_data":"93c3575771c236553c468b4eaad74190111c16f0ac536f28d4dbfd87f246f049a0629b5579f9c78cfd7fa6158588817ee30448407254045e4c1eb3d51952f8a89b2663032fc8a147de2a273bae9a694d9b4450ffa36ed163d87f03369d541ef3a072d32161fed264a445074c06f06e205c8393a0347194a376f18c339d74639893e4560af3f83bf69922ad1051f315e2" /* 2 */
+			"encoding": "hex", /* 1 */
+			"algo": "SHA256", /* 1 */
+			"salt": "a2b606e725eecb30a063c6e4faa259d4",
+			"iterations": 4574,
+			"cipher": "AES", /* 1 */
+			"iv": "6a20dbd79f1a69c0464f5bc3fc62aa88",
+			"master_key_data": "93c3575771c236553c468b4eaad74190111c16f0ac536f28d4dbfd87f246f049a0629b5579f9c78cfd7fa6158588817ee30448407254045e4c1eb3d51952f8a89b2663032fc8a147de2a273bae9a694d9b4450ffa36ed163d87f03369d541ef3a072d32161fed264a445074c06f06e205c8393a0347194a376f18c339d74639893e4560af3f83bf69922ad1051f315e2" /* 2 */
 		},
 		{
-			"encoding":"hex", /* 1 */
-			"algo":"SHA256", /* 1 */
-			"salt":"eea464df30fb01362d7160411f9077a7",
-			"iterations":"3720",
-			"cipher":"AES", /* 1 */
-			"iv":"755215b1c558d4fdcac4e4503c3894c1",
-			"master_key_data":"7c73d52ffa6a6c843fd7d31afbd4bf4df9cef992d917af83fc53a6db5067180f7fa9d6fe45101c717e134beed0f7d25fa6a64812ce34460725a4755da49b462269e20b3d6bde08a3cf86a80070fb5f04f2ea45217a52b35afba53873479148e68f640e2e1b56e78e4f2e6482f671009ecad01124c42ee6763c4426a229fb6ddc34f472944c89096d5d93128588eb52ee" /* 2 */
+			"encoding": "hex", /* 1 */
+			"algo": "SHA256", /* 1 */
+			"salt": "eea464df30fb01362d7160411f9077a7",
+			"iterations": 3720,
+			"cipher": "AES", /* 1 */
+			"iv": "755215b1c558d4fdcac4e4503c3894c1",
+			"master_key_data": "7c73d52ffa6a6c843fd7d31afbd4bf4df9cef992d917af83fc53a6db5067180f7fa9d6fe45101c717e134beed0f7d25fa6a64812ce34460725a4755da49b462269e20b3d6bde08a3cf86a80070fb5f04f2ea45217a52b35afba53873479148e68f640e2e1b56e78e4f2e6482f671009ecad01124c42ee6763c4426a229fb6ddc34f472944c89096d5d93128588eb52ee" /* 2 */
 		}
 	],
-	"encoding":"hex", /* 1 */
-	"data":"81141b64e32a15af50ecda037b4f3d73"
+	"encoding": "hex", /* 1 */
+	"data": "81141b64e32a15af50ecda037b4f3d73"
 }
 
 1: these parameters cannot be changed at the moment, default values are set above, anything else will be ignored
 2: contains the "master key" parameters (cipher, key, iv) encrypted with the "user key"
 
-Note: the above example has data encoded with passwords "test" and "test2".
+Note: the above example has data encoded with passwords "test" and "test2"
 </pre>
 		<h2>All the details</h2>
 		
