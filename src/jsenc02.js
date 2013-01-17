@@ -1,5 +1,53 @@
 var _container;
 
+function _friendly_json(s)
+{
+	/* this is not a complete nor optimal code formatting, I know */
+	var i, j, indents, force_newline;
+	var t = "";
+	var indent_string = "  ";
+	
+	indents = 0;
+	for (i=0; i<s.length; i++)
+	{
+		force_newline = false;
+		if (s[i] == "{" || s[i] == "[")
+		{
+			indents++;
+			force_newline = true;
+		}
+		else if (s[i] == "}" || s[i] == "]")
+		{
+			indents--;
+			if (s[i+1] != ",")
+			{
+				force_newline = true;
+			}
+		}
+		else if (s[i] == ",")
+		{
+			force_newline = true;
+		}
+		
+		if (s[i] != "\n")
+		{
+			t += s[i];
+		}
+		
+		if (s[i] == "\n" || force_newline)
+		{
+			t += "\n";
+			for (j=0; j<indents; j++)
+			{
+				t += indent_string;
+			}
+		}
+		
+	}
+	
+	return t;
+}
+
 function _update_container_data()
 {
 	if (_container === undefined || _container.data === undefined)
@@ -17,7 +65,15 @@ function _update_container_data()
 	document.getElementById("master_key_key").value = _container.masterKey.key ? _container.masterKey.key : "n/a";
 	document.getElementById("master_key_iv").value = _container.masterKey.iv ? _container.masterKey.iv : "n/a";
 	
-	document.getElementById("container_current_data").value = _container.getJson();
+	document.getElementById("container_current_data").value = _friendly_json(_container.getJson());
+	try
+	{
+		document.getElementById("current_data_data").value = _container.getContainerData();
+	}
+	catch (e)
+	{
+		document.getElementById("current_data_data").value = "n/a";
+	}
 }
 
 function container_generate()
@@ -168,7 +224,7 @@ function current_data_save()
 function current_data_discard()
 {
 	try {
-		document.getElementById("current_data_data").value = _container.getContainerData();
+		_update_container_data();
 	}
 	catch (e)
 	{

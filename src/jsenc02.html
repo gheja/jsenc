@@ -57,7 +57,7 @@
 				background: #80ffff;
 			}
 			
-			hr.clearer
+			.clearer
 			{
 				float: none;
 				clear: both;
@@ -65,7 +65,7 @@
 		</style>
 	</head>
 	<body>
-		<h1>jsenc02 example - the TKE extension for CryptoJS (WORK IN PROGRESS)</h1>
+		<h1>jsenc02 example - the TKE extension for CryptoJS</h1>
 		
 		<h2>About jsenc</h2>
 		
@@ -80,7 +80,7 @@
 		<h2>About the example</h2>
 		
 		<p>
-			<strong>This example is in a "work in progress" state, most likely it will change and somethimes may simply not work.</strong>
+			<strong>This example is in a "work in progress" state, most likely it will change and have some cleanup. It is working now but further modifications may break compatibility between versions - although I have introduced the "version" property to avoid this.</strong>
 		</p>
 		
 		<p>
@@ -95,35 +95,38 @@
 			A great advantage lies in using two different keys: you can add another "user key" anytime or delete an existing one <strong>without touching your encrypted data</strong> (as that's encryption is done with the "master key", also you need to know only one "user key" to decrypt the "master key" before). That is, you can have as many independent "user keys" as you want (i.e. users can have their very own keys for a common data) and in fact you don't need to remember the master key, which is generated randomly on the first use.
 		</p>
 		
-		<h2>planned JSON structure</h2>
+		<h2>JSON structure</h2>
 <pre>
 {
-	"keys": {
-		"0": {
-			"encoding": "hex", /* 1 */
-			"key_algo": "SHA256", /* 1 */
-			"key_salt": "b3661cf591dce8a5f1c451a84a2f2d00",
-			"key_iterations": 2344,
-			"cipher": "AES", /* 1 */
-			"iv": "f591dce8a5f1c451a84a2f2d00b3661c",
-			"master_key_data": "dce8a5f1c451a84a2f2d00b3661cf591" /* 2 */
+	"version":1,
+	"keys": [
+		{
+			"encoding":"hex", /* 1 */
+			"algo":"SHA256", /* 1 */
+			"salt":"a2b606e725eecb30a063c6e4faa259d4",
+			"iterations":"4574",
+			"cipher":"AES", /* 1 */
+			"iv":"6a20dbd79f1a69c0464f5bc3fc62aa88",
+			"master_key_data":"93c3575771c236553c468b4eaad74190111c16f0ac536f28d4dbfd87f246f049a0629b5579f9c78cfd7fa6158588817ee30448407254045e4c1eb3d51952f8a89b2663032fc8a147de2a273bae9a694d9b4450ffa36ed163d87f03369d541ef3a072d32161fed264a445074c06f06e205c8393a0347194a376f18c339d74639893e4560af3f83bf69922ad1051f315e2" /* 2 */
 		},
-		"1": {
-			"encoding": "hex", /* 1 */
-			"key_algo": "SHA256", /* 1 */
-			"key_salt": "1a84a2f2d00b3661cf591dce8a5f1c45",
-			"key_iterations": 5234,
-			"cipher": "AES", /* 1 */
-			"iv": "8a5f1c451a84a2f2d00b3661cf591dce",
-			"master_key_data": "1a84a2f2d00b3661cf591dce8a5f1c45" /* 2 */
+		{
+			"encoding":"hex", /* 1 */
+			"algo":"SHA256", /* 1 */
+			"salt":"eea464df30fb01362d7160411f9077a7",
+			"iterations":"3720",
+			"cipher":"AES", /* 1 */
+			"iv":"755215b1c558d4fdcac4e4503c3894c1",
+			"master_key_data":"7c73d52ffa6a6c843fd7d31afbd4bf4df9cef992d917af83fc53a6db5067180f7fa9d6fe45101c717e134beed0f7d25fa6a64812ce34460725a4755da49b462269e20b3d6bde08a3cf86a80070fb5f04f2ea45217a52b35afba53873479148e68f640e2e1b56e78e4f2e6482f671009ecad01124c42ee6763c4426a229fb6ddc34f472944c89096d5d93128588eb52ee" /* 2 */
 		}
-	},
-	"encoding": "hex", /* 1 */
-	"data": "bcc40c60afa8267e9f615b9f5ec9391abcc40c60afa8267e9f615b9f5ec9391abcc40c60afa8267e9f615b9f5ec9391a"
+	],
+	"encoding":"hex", /* 1 */
+	"data":"81141b64e32a15af50ecda037b4f3d73"
 }
 
 1: these parameters cannot be changed at the moment, default values are set above, anything else will be ignored
 2: contains the "master key" parameters (cipher, key, iv) encrypted with the "user key"
+
+Note: the above example has data encoded with passwords "test" and "test2".
 </pre>
 		<h2>All the details</h2>
 		
@@ -270,6 +273,24 @@
 				<input type="button" value="save changes" onclick="current_data_save();" />
 				<input type="button" value="discard changes" onclick="current_data_discard();" /><br/>
 			</fieldset>
+		</div>
+		
+		<div class="box">
+			<h3>Quick guide: creating a new container</h3>
+			<ul>
+				<li>Create a container with "Generate new container" &raquo; "generate" - the container is now open, has all the parameters needed for encryption/decryption but have no passwords therfore it can't be opened again.</li>
+				<li>Add a password by filling "Add key" &raquo; "Password" and "Password again" fields, pressing the "randomize" and "add" buttons - the container now have one keyslot.</li>
+				<li>Add some data by modifying "Current data" &raquo; "Current data" field and pressing the "save changes" button.</li>
+				<li>Close the container by "Manage current container" &raquo; "close".</li>
+				<li>Store the container somewhere for later use (see next section).</li>
+			</ul>
+			
+			<h3>Quick guide: using a container</h3>
+			<ul>
+				<li>Load a container by copy-pasting the JSON stuffs to "Load an existing container" &raquo; "Container data (JSON encoded)" field and pressing the "load" button.</li>
+				<li>Open the container by filling "Manage current container" &raquo; "Open container with password" and pressing the "open" button.</li>
+				<li>Now you can modify your contents (don't forget to press "save changes"!) add or delete keys and so on.</li>
+			</ul>
 		</div>
 		
 		<hr class="clearer" />
